@@ -1,15 +1,15 @@
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    "log"
-    "net/http"
-    "strconv"
+	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+	"strconv"
 
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 
-    _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 // GetAlbumByID locates the album whose ID value matches the id
@@ -26,7 +26,7 @@ func (env Env) GetAlbumByID(c *gin.Context) {
     var name, title string
     var price float64
 
-    q := `SELECT * FROM test;`
+    q := `SELECT * FROM artist where id=$1`
     row := env.DB.QueryRow(q, id)
 
     err = row.Scan(&id, &name, &title, &price)
