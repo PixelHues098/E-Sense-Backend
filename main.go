@@ -1,14 +1,32 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+    "log"
+
+    "github.com/gin-gonic/gin"
+)
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
+    // connect to DB first
+    env := new(Env)
+    var err error
+    env.DB, err = ConnectDB()
+    if err != nil {
+        log.Fatalf("failed to start the server: %v", err)
+    }
+
+    router := gin.Default()
+    router.GET("/albums/:id", env.GetAlbumByID)
+    router.GET("/albums", env.GetAlbums)
+    router.POST("/albums", env.PostAlbum)
+    router.PUT("/albums", env.UpdateAlbum)
+    router.DELETE("/albums/:id", env.DeleteAlbumByID)
+
+	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
-	r.Run() // listen and serve on 0.0.0.0:8080
-}
 
+    router.Run()
+}
