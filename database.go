@@ -20,7 +20,7 @@ const (
     port     = 5432
     user     = "postgres"
     password = "root"
-    dbname   = "artist"
+    dbname   = "esense"
 )
 
 // ConnectDB tries to connect DB and on succcesful it returns
