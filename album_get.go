@@ -24,7 +24,7 @@ func (env Env) GetAlbumByID(c *gin.Context) {
     }
 
     var name, title string
-    var price float64
+    var price string
 
     q := `SELECT * FROM artist where id=$1`
     row := env.DB.QueryRow(q, id)
@@ -117,7 +117,7 @@ func (env Env) GetAlbums(c *gin.Context) {
         for rows.Next() {
             var id int
             var name, title string
-            var price float64
+            var price string
             err = rows.Scan(&id, &name, &title, &price)
             if err != nil {
                 log.Printf("error occurred while reading the database rows: %v", err)
