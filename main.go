@@ -17,15 +17,14 @@ func main() {
 	}
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"https://localhost:7133"}
-
+	config.AllowOrigins = []string{"http://localhost:5000"}
 	router := gin.Default()
 	router.GET("/albums/:id", env.GetAlbumByID)
 	router.GET("/albums", env.GetAlbums)
 	router.POST("/albums", env.PostAlbum)
 	router.PUT("/albums", env.UpdateAlbum)
 	router.DELETE("/albums/:id", env.DeleteAlbumByID)
-
+	router.POST("/register")
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
