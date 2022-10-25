@@ -1,55 +1,26 @@
 package main
 
-// import (
-// 	"fmt"
-// 	"log"
-// 	"net/http"
-// 	"strconv"
+import (
+	"net/http"
 
-// 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+)
 
-// 	_ "github.com/lib/pq"
-// )
+// DeleteAlbumByID locates the album whose ID value matches the id
+// parameter sent by the client, then returns that corresponding message.
+func RemoveIndex(s []album, index int) []album {
+	return append(s[:index], s[index+1:]...)
+}
+func deleteAlbumByID(c *gin.Context) {
 
-// // DeleteAlbumByID locates the album whose ID value matches the id
-// // parameter sent by the client, then returns that corresponding message.
-// func (env Env) deleteAlbumByID(c *gin.Context) {
-// 	id, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		e := fmt.Sprintf("received invalid id path param which is not string: %v", c.Param("id"))
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusNotFound, e)
-// 		return
-// 	}
+	id := c.Param("id")
 
-// 	q := `DELETE FROM artist WHERE id = $1;`
-// 	result, err := env.DB.Exec(q, id)
-// 	if err != nil {
-// 		e := fmt.Sprintf("error occurred while deleting artist record with id: %d and error is: %v", id, err)
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusInternalServerError, e)
-// 		return
-// 	}
+	for i, album := range albums {
 
-// 	// checking the number of rows affected
-// 	n, err := result.RowsAffected()
-// 	if err != nil {
-// 		e := fmt.Sprintf("error occurred while checking the returned result from database after deletion: %v", err)
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusInternalServerError, e)
-// 		return
-// 	}
-
-// 	// if no record was deleted, let us inform that there might be no
-// 	// records to delete for this given album ID.
-// 	if n == 0 {
-// 		e := "could not delete the record, there might be no records for the given ID"
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusBadRequest, e)
-// 		return
-// 	}
-
-// 	m := "successfully deleted the record"
-// 	log.Println(m)
-// 	makeGinResponse(c, http.StatusOK, m)
-// }
+		if album.ID == id {
+			albums = RemoveIndex(albums, i)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+}

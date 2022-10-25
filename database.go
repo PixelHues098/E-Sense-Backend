@@ -2,10 +2,11 @@ package main
 
 // import (
 // 	"database/sql"
-// 	"fmt"
-// 	"log"
+	// "fmt"
+	// "log"
+	
 
-// 	_ "github.com/lib/pq"
+	// _ "github.com/lib/pq"
 // )
 
 // // Env holds database connection to Postgres
@@ -13,8 +14,8 @@ package main
 // 	DB *sql.DB
 // }
 
-// // database variables
-// // usually we should get them from env like os.Getenv("variableName")
+// database variables
+// usually we should get them from env like os.Getenv("variableName")
 // const (
 // 	host     = "localhost"
 // 	port     = 5432
@@ -29,7 +30,7 @@ package main
 // 	connString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname = %s sslmode=disable", host, port, user, password, dbname)
 // 	db, err := sql.Open("postgres", connString)
 // 	if err != nil {
-// 		log.Print("failed to connect to database: %v", err)
+// 		log.Printf("failed to connect to database: %v", err)
 // 		return &sql.DB{}, err
 // 	} else {
 // 		fmt.Println("Connection success")

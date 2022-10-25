@@ -1,55 +1,28 @@
 package main
 
-// import (
-// 	"fmt"
-// 	"log"
-// 	"net/http"
+import (
+	"net/http"
 
-// 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+)
 
-// 	_ "github.com/lib/pq"
-// )
+// UpdateAlbum updates the Album with the given details if record found.
+func updateAlbums(c *gin.Context) {
 
-// // UpdateAlbum updates the Album with the given details if record found.
-// func (env Env)updateAlbums(c *gin.Context) {
-// 	// Call BindJSON to bind the received JSON to
-// 	// toBeUpdatedAlbum.
-// 	var toBeUpdatedAlbum album
-// 	if err := c.BindJSON(&toBeUpdatedAlbum); err != nil {
-// 		e := fmt.Sprintf("invalid JSON body: %v", err)
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusBadRequest, e)
-// 		return
-// 	}
+	id := c.Param("id")
 
-// 	q := `UPDATE artist 
-//     SET name=$1,title=$2, price=$3
-//     WHERE id=$4;`
-// 	result, err := env.DB.Exec(q, toBeUpdatedAlbum.Artist, toBeUpdatedAlbum.Title, toBeUpdatedAlbum.Price, toBeUpdatedAlbum.ID)
-// 	if err != nil {
-// 		e := fmt.Sprintf("error: %v occurred while updating artist record with id: %d", err, toBeUpdatedAlbum.ID)
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusInternalServerError, e)
-// 		return
-// 	}
+	var updateData album
 
-// 	// checking the number of rows affected
-// 	n, err := result.RowsAffected()
-// 	if err != nil {
-// 		e := fmt.Sprintf("error occurred while checking the returned result from database after updation: %v", err)
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusInternalServerError, e)
-// 	}
+	if error := c.BindJSON(&updateData); error != nil {
+		return
+	}
+	for i, album := range albums {
 
-// 	// if no record was updated, let us say client has failed
-// 	if n == 0 {
-// 		e := "could not update the record, please try again after sometime"
-// 		log.Println(e)
-// 		makeGinResponse(c, http.StatusInternalServerError, e)
-// 		return
-// 	}
-
-// 	m := "successfully updated the record"
-// 	log.Println(m)
-// 	makeGinResponse(c, http.StatusOK, m)
-// }
+		if album.ID == id {
+			albums[i] = updateData
+			c.IndentedJSON(http.StatusOK, albums[i])
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"msg": "album not found"})
+}
