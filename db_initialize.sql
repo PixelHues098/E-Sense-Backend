@@ -4,8 +4,7 @@ CREATE TABLE users(
     last_name VARCHAR(255) NOT NULL,
 	project_id INT NULL,
 	username VARCHAR(255) NOT NULL,
-	password_hash bytea NOT NULL,
-	salt bytea NULL,
+	password_hash VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	date_created DATE NOT NULL default current_timestamp
 

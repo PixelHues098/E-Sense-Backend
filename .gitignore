@@ -6,7 +6,7 @@
 bin/*
 pkg/*
 !.gitkeep
-
+.env.local
 # goop - go package manager
 .vendor
 
