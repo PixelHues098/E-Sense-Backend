@@ -1,32 +1,41 @@
 package main
 
 import (
-	"log"
-
-	"github.com/gin-gonic/gin"
+    "esense/controller"
+    "esense/database"
+    "esense/model"
+    "github.com/gin-contrib/cors"
+    "github.com/gin-gonic/gin"
+    "github.com/joho/godotenv"
+    "log"
 )
 
 func main() {
-	// connect to DB first
-	env := new(Env)
-	var err error
-	env.DB, err = ConnectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
+    loadEnv()
+    loadDatabase()
+    serveApplication()
+}
 
-	router := gin.Default()
-	router.GET("/albums/:id", env.GetAlbumByID)
-	router.GET("/albums", env.GetAlbums)
-	router.POST("/albums", env.PostAlbum)
-	router.PUT("/albums", env.UpdateAlbum)
-	router.DELETE("/albums/:id", env.DeleteAlbumByID)
+func loadEnv() {
+    err := godotenv.Load(".env.local")
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+}
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+func loadDatabase() {
+    database.Connect()
+    database.Database.AutoMigrate(&model.User{})
+}
 
-	router.Run()
+func serveApplication() {
+    router := gin.Default()
+
+    publicRoutes := router.Group("/auth")
+    publicRoutes.POST("/register-user", controller.Register)
+    publicRoutes.POST("/login-user", controller.Login)
+    config := cors.DefaultConfig()
+    config.AllowOrigins = []string{"http://localhost:5000"}
+    router.Use(cors.New(config))
+    router.Run()
 }
