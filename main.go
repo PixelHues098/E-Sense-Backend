@@ -26,6 +26,10 @@ func loadEnv() {
 func loadDatabase() {
     database.Connect()
     database.Database.AutoMigrate(&model.User{})
+    database.Database.AutoMigrate(&model.Project{})
+    database.Database.AutoMigrate(&model.Sprint{})
+    database.Database.AutoMigrate(&model.Swimlane{})
+    database.Database.AutoMigrate(&model.Issue{})
 }
 
 func serveApplication() {
